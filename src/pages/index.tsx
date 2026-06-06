@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
-import styles from "@/styles/Home.module.css";
+import styles1 from "@/styles/Home.module.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,18 +23,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}
+        className={`${styles1.page} ${geistSans.variable} ${geistMono.variable}`}
       >
-        <main className={styles.main}>
+        <main className={styles1.main}>
           <Image
-            className={styles.logo}
+            className={styles1.logo}
             src="/next.svg"
             alt="Next.js logo"
             width={100}
             height={20}
             priority
           />
-          <div className={styles.intro}>
+          <div className={styles1.intro}>
             <h1>To get started, edit the index.tsx file.</h1>
             <p>
               Looking for a starting point or more instructions? Head over to{" "}
@@ -56,15 +56,15 @@ export default function Home() {
               center.
             </p>
           </div>
-          <div className={styles.ctas}>
+          <div className={styles1.ctas}>
             <a
-              className={styles.primary}
+              className={styles1.primary}
               href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
             >
               <Image
-                className={styles.logo}
+                className={styles1.logo}
                 src="/vercel.svg"
                 alt="Vercel logomark"
                 width={16}
@@ -73,7 +73,7 @@ export default function Home() {
               Deploy Now
             </a>
             <a
-              className={styles.secondary}
+              className={styles1.secondary}
               href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
               target="_blank"
               rel="noopener noreferrer"
