@@ -10,9 +10,9 @@ const Modal = ({ children, onClose }: { children: React.ReactNode; onClose: any 
         onClose();
       }
     };
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside); //click
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside); //click
     };
   }, [onClose]);
   return (
