@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import { retrieveDataById } from "@/lib/firebase/service";
-import { decode } from "punycode";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
