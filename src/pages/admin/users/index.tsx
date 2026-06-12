@@ -2,7 +2,7 @@ import UsersAdminView from "@/components/views/admin/Users";
 import userServices from "@/services/user";
 import { useEffect, useState } from "react";
 
-const AdminProductsPage = () => {
+const AdminUsersPage = ({ setToaster }: any) => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const getAllUsers = async () => {
@@ -13,9 +13,9 @@ const AdminProductsPage = () => {
   }, []);
   return (
     <>
-      <UsersAdminView users={users} />
+      <UsersAdminView users={users} setToaster={setToaster} />
     </>
   );
 };
 
-export default AdminProductsPage;
+export default AdminUsersPage;

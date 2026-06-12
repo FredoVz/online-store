@@ -7,10 +7,11 @@ import ModalDeleteUser from "./ModalDeleteUser";
 
 type PropTypes = {
   users: any;
+  setToaster: any;
 };
 
 const UsersAdminView = (props: PropTypes) => {
-  const { users } = props;
+  const { users, setToaster } = props;
   const [updatedUser, setUpdatedUser] = useState<any>({});
   const [deletedUser, setDeletedUser] = useState<any>({});
   const [usersData, setUsersData] = useState([]);
@@ -65,8 +66,8 @@ const UsersAdminView = (props: PropTypes) => {
           </table>
         </div>
       </AdminLayout>
-      {Object.keys(updatedUser).length && <ModalUpdateUser updatedUser={updatedUser} setUpdatedUser={setUpdatedUser} setUsersData={setUsersData} />}
-      {Object.keys(deletedUser).length && <ModalDeleteUser deletedUser={deletedUser} setDeletedUser={setDeletedUser} setUsersData={setUsersData} />}
+      {Object.keys(updatedUser).length && <ModalUpdateUser updatedUser={updatedUser} setUpdatedUser={setUpdatedUser} setUsersData={setUsersData} setToaster={setToaster} />}
+      {Object.keys(deletedUser).length && <ModalDeleteUser deletedUser={deletedUser} setDeletedUser={setDeletedUser} setUsersData={setUsersData} setToaster={setToaster} />}
     </>
   );
 };
