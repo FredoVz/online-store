@@ -1,14 +1,13 @@
 import styles from "./Login.module.scss";
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { signIn } from "next-auth/react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import AuthLayout from "@/components/layouts/AuthLayout";
 
-const LoginView = () => {
+const LoginView = ({ setToaster }: { setToaster: Dispatch<SetStateAction<{}>> }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const { push, query } = useRouter();
   const callbackUrl: any = query.callbackUrl || "/";
@@ -16,7 +15,6 @@ const LoginView = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    setError("");
     const form = event.target as HTMLFormElement;
     try {
       const res = await signIn("credentials", {
@@ -30,17 +28,27 @@ const LoginView = () => {
         setIsLoading(false);
         form.reset();
         push(callbackUrl);
+        setToaster({
+          variant: "success",
+          message: "Login Success",
+        });
       } else {
         setIsLoading(false);
-        setError("Error or password is incorrect");
+        setToaster({
+          variant: "danger",
+          message: "Error or password is incorrect",
+        });
       }
     } catch (error) {
       setIsLoading(false);
-      setError("Error or password is incorrect");
+      setToaster({
+        variant: "danger",
+        message: "Login failed, please call support",
+      });
     }
   };
   return (
-    <AuthLayout title="Login" error={error} link="/auth/register" linkText="Don't have an account? Sign up ">
+    <AuthLayout title="Login" link="/auth/register" linkText="Don't have an account? Sign up " setToaster={setToaster}>
       <form onSubmit={handleSubmit}>
         <Input label="Email" name="email" type="email" />
         <Input label="Password" name="password" type="password" />
