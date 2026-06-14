@@ -9,6 +9,7 @@ import InputFile from "@/components/ui/InputFile";
 import productServices from "@/services/product";
 import { useSession } from "next-auth/react";
 import { uploadFile } from "@/lib/firebase/service";
+import Image from "next/image";
 
 type Proptypes = {
   setModalAddProduct: Dispatch<SetStateAction<boolean>>;
@@ -133,6 +134,26 @@ const ModalAddProduct = (props: Proptypes) => {
             { label: "Not Released", value: "false" },
           ]}
         />
+        <label htmlFor="image">Image</label>
+        <div className={styles.form__image}>
+          {uploadedImage ? (
+            <Image
+              width={200}
+              height={200}
+              src={URL.createObjectURL(uploadedImage)}
+              alt="image"
+              className={styles.form__image__preview}
+            />
+          ) : (
+            <div className={styles.form__image__placeholder}>No Image</div>
+          )}
+
+          <InputFile
+            name="image"
+            uploadedImage={uploadedImage}
+            setUploadedImage={setUploadedImage}
+          />
+        </div>
         <label htmlFor="stock">Stock</label>
         {stockCount.map((item: { size: string; qty: number }, i: number) => (
           <div className={styles.form__stock} key={i}>
@@ -167,12 +188,6 @@ const ModalAddProduct = (props: Proptypes) => {
         >
           Add New Stock
         </Button>
-        <label htmlFor="image">Image</label>
-        <InputFile
-          name="image"
-          uploadedImage={uploadedImage}
-          setUploadedImage={setUploadedImage}
-        />
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Add Product"}
         </Button>
