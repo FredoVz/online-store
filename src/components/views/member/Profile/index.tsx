@@ -15,7 +15,12 @@ type PropTypes = {
   setToaster: Dispatch<SetStateAction<{}>>;
 };
 
-const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTypes) => {
+const ProfileMemberView = ({
+  profile,
+  setProfile,
+  session,
+  setToaster,
+}: PropTypes) => {
   const [changeImage, setChangeImage] = useState<File | any>({});
   const [isLoading, setIsLoading] = useState("");
 
@@ -27,7 +32,10 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
       fullname: form.fullname.value,
       phone: form.phone.value,
     };
-    const result = await userServices.updateProfile(data, session.data?.accessToken);
+    const result = await userServices.updateProfile(
+      data,
+      session.data?.accessToken,
+    );
     if (result.status === 200) {
       setIsLoading("");
       setProfile({
@@ -50,37 +58,47 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
     setIsLoading("picture");
     const form = e.target as HTMLFormElement;
     const file = form.image.files[0];
+    const newName = "profile." + file.name.split(".")[1];
     if (file) {
-      uploadFile(profile.id, file, async (status: boolean, newImageURL: string) => {
-        if (status) {
-          const data = {
-            image: newImageURL,
-          };
-          const result = await userServices.updateProfile(data, session.data?.accessToken);
-          if (result.status === 200) {
-            setIsLoading("");
-            setProfile({
-              ...profile,
+      uploadFile(
+        profile.id,
+        file,
+        newName,
+        "users",
+        async (status: boolean, newImageURL: string) => {
+          if (status) {
+            const data = {
               image: newImageURL,
-            });
-            setChangeImage({});
-            form.reset();
-            setToaster({
-              variant: "success",
-              message: "Success Change Avatar",
-            });
+            };
+            const result = await userServices.updateProfile(
+              data,
+              session.data?.accessToken,
+            );
+            if (result.status === 200) {
+              setIsLoading("");
+              setProfile({
+                ...profile,
+                image: newImageURL,
+              });
+              setChangeImage({});
+              form.reset();
+              setToaster({
+                variant: "success",
+                message: "Success Change Avatar",
+              });
+            } else {
+              setIsLoading("");
+            }
           } else {
             setIsLoading("");
+            setChangeImage({});
+            setToaster({
+              variant: "danger",
+              message: "Failed Change Avatar",
+            });
           }
-        } else {
-          setIsLoading("");
-          setChangeImage({});
-          setToaster({
-            variant: "danger",
-            message: "Failed Change Avatar",
-          });
-        }
-      });
+        },
+      );
     }
   };
 
@@ -94,7 +112,10 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
       encryptedPassword: profile.password,
     };
     try {
-      const result = await userServices.updateProfile(data, session.data?.accessToken);
+      const result = await userServices.updateProfile(
+        data,
+        session.data?.accessToken,
+      );
       if (result.status === 200) {
         setIsLoading("");
         form.reset();
@@ -120,18 +141,32 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
           <div className={styles.profile__main__row__avatar}>
             <h2 className={styles.profile__main__row__avatar__title}>Avatar</h2>
             {profile.image ? (
-              <Image className={styles.profile__main__row__avatar__image} src={profile.image} alt="profile" width={200} height={200} />
+              <Image
+                className={styles.profile__main__row__avatar__image}
+                src={profile.image}
+                alt="profile"
+                width={200}
+                height={200}
+              />
             ) : (
-              <div className={styles.profile__main__row__avatar__image}>{profile?.fullname?.charAt(0)}</div>
+              <div className={styles.profile__main__row__avatar__image}>
+                {profile?.fullname?.charAt(0)}
+              </div>
             )}
 
             <form onSubmit={handleChangeProfilePicture}>
-              <label className={styles.profile__main__row__avatar__label} htmlFor="upload-image">
+              <label
+                className={styles.profile__main__row__avatar__label}
+                htmlFor="upload-image"
+              >
                 {changeImage.name ? (
                   <p>{changeImage.name}</p>
                 ) : (
                   <>
-                    <p>Upload a new avatar, Larger image will be resized automatically</p>
+                    <p>
+                      Upload a new avatar, Larger image will be resized
+                      automatically
+                    </p>
                     <p>
                       Maximum upload size is <b>1 MB</b>
                     </p>
@@ -148,18 +183,46 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
                   setChangeImage(e.currentTarget.files[0]);
                 }}
               />
-              <Button className={styles.profile__main__row__avatar__button} type="submit">
+              <Button
+                className={styles.profile__main__row__avatar__button}
+                type="submit"
+              >
                 {isLoading === "picture" ? "Uploading..." : "Upload"}
               </Button>
             </form>
           </div>
           <div className={styles.profile__main__row__profile}>
-            <h2 className={styles.profile__main__row__profile__title}>Profile</h2>
+            <h2 className={styles.profile__main__row__profile__title}>
+              Profile
+            </h2>
             <form onSubmit={handleChangeProfile}>
-              <Input label="Fullname" type="text" name="fullname" defaultValue={profile.fullname} />
-              <Input label="Phone" type="number" name="phone" defaultValue={profile.phone} placeholder="Input your phone number" />
-              <Input label="Email" type="email" name="email" defaultValue={profile.email} disabled />
-              <Input label="Role" type="text" name="role" defaultValue={profile.role} disabled />
+              <Input
+                label="Fullname"
+                type="text"
+                name="fullname"
+                defaultValue={profile.fullname}
+              />
+              <Input
+                label="Phone"
+                type="number"
+                name="phone"
+                defaultValue={profile.phone}
+                placeholder="Input your phone number"
+              />
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                defaultValue={profile.email}
+                disabled
+              />
+              <Input
+                label="Role"
+                type="text"
+                name="role"
+                defaultValue={profile.role}
+                disabled
+              />
               <Button type="submit" variant="primary">
                 {isLoading === "profile" ? "loading..." : "Update Profile"}
               </Button>
@@ -168,9 +231,24 @@ const ProfileMemberView = ({ profile, setProfile, session, setToaster }: PropTyp
           <div className={styles.profile__main__row__password}>
             <h2>Change Password</h2>
             <form onSubmit={handleChangePassword}>
-              <Input name="old-password" label="Old Password" type="password" disabled={profile.type === "google"} placeholder="Enter your current password" />
-              <Input name="new-password" label="New Password" type="password" disabled={profile.type === "google"} placeholder="Enter your new password" />
-              <Button type="submit" disabled={isLoading === "password" || profile.type === "google"}>
+              <Input
+                name="old-password"
+                label="Old Password"
+                type="password"
+                disabled={profile.type === "google"}
+                placeholder="Enter your current password"
+              />
+              <Input
+                name="new-password"
+                label="New Password"
+                type="password"
+                disabled={profile.type === "google"}
+                placeholder="Enter your new password"
+              />
+              <Button
+                type="submit"
+                disabled={isLoading === "password" || profile.type === "google"}
+              >
                 {isLoading === "password" ? "loading..." : "Update Password"}
               </Button>
             </form>

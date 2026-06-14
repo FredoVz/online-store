@@ -3,7 +3,7 @@ import Input from "@/components/ui/Input";
 import Modal from "@/components/ui/Modal";
 import Select from "@/components/ui/Select";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import styles from "./ModalAddProduct.module.scss";
+import styles from "./ModalUpdateProduct.module.scss";
 import { Product } from "@/types/product.type";
 import InputFile from "@/components/ui/InputFile";
 import productServices from "@/services/product";
@@ -11,13 +11,15 @@ import { useSession } from "next-auth/react";
 import { uploadFile } from "@/lib/firebase/service";
 
 type Proptypes = {
-  setModalAddProduct: Dispatch<SetStateAction<boolean>>;
+  updatedProduct: Product | any;
+  setUpdatedProduct: Dispatch<SetStateAction<boolean>>;
   setToaster: Dispatch<SetStateAction<{}>>;
   setProductsData: Dispatch<SetStateAction<Product[]>>;
 };
 
-const ModalAddProduct = (props: Proptypes) => {
-  const { setModalAddProduct, setToaster, setProductsData } = props;
+const ModalUpdateProduct = (props: Proptypes) => {
+  const { updatedProduct, setUpdatedProduct, setToaster, setProductsData } =
+    props;
   const [isLoading, setIsLoading] = useState(false);
   const [stockCount, setStockCount] = useState([{ size: "", qty: 0 }]);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -52,7 +54,7 @@ const ModalAddProduct = (props: Proptypes) => {
               setIsLoading(false);
               setUploadedImage(null);
               form.reset();
-              setModalAddProduct(false);
+              setUpdatedProduct(false);
               const { data } = await productServices.getAllProducts();
               setProductsData(data.data);
               setToaster({
@@ -102,7 +104,7 @@ const ModalAddProduct = (props: Proptypes) => {
   };
 
   return (
-    <Modal onClose={() => setModalAddProduct(false)}>
+    <Modal onClose={() => setUpdatedProduct(false)}>
       <h1>Update User</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <Input
@@ -110,12 +112,14 @@ const ModalAddProduct = (props: Proptypes) => {
           name="name"
           type="text"
           placeholder="Insert product name"
+          defaultValue={updatedProduct.name}
         />
         <Input
           label="Price"
           name="price"
           type="number"
           placeholder="Insert product price"
+          defaultValue={updatedProduct.price}
         />
         <Select
           label="Category"
@@ -124,6 +128,7 @@ const ModalAddProduct = (props: Proptypes) => {
             { label: "Men", value: "men" },
             { label: "Women", value: "women" },
           ]}
+          defaultValue={updatedProduct.category}
         />
         <Select
           label="Status"
@@ -132,6 +137,7 @@ const ModalAddProduct = (props: Proptypes) => {
             { label: "Released", value: "true" },
             { label: "Not Released", value: "false" },
           ]}
+          defaultValue={updatedProduct.status}
         />
         <label htmlFor="stock">Stock</label>
         {stockCount.map((item: { size: string; qty: number }, i: number) => (
@@ -181,4 +187,4 @@ const ModalAddProduct = (props: Proptypes) => {
   );
 };
 
-export default ModalAddProduct;
+export default ModalUpdateProduct;

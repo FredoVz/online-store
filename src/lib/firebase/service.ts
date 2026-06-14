@@ -1,6 +1,22 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import app from "./init";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 const firestore = getFirestore(app);
 
@@ -21,8 +37,15 @@ export async function retrieveDataById(collectionName: string, id: string) {
   return data;
 }
 
-export async function retrieveDataByField(collectionName: string, field: string, value: string) {
-  const q = query(collection(firestore, collectionName), where(field, "==", value));
+export async function retrieveDataByField(
+  collectionName: string,
+  field: string,
+  value: string,
+) {
+  const q = query(
+    collection(firestore, collectionName),
+    where(field, "==", value),
+  );
 
   const snapshot = await getDocs(q);
   const data = snapshot.docs.map((doc) => ({
@@ -33,7 +56,11 @@ export async function retrieveDataByField(collectionName: string, field: string,
   return data;
 }
 
-export async function addData(collectionName: string, data: any, callback: Function) {
+export async function addData(
+  collectionName: string,
+  data: any,
+  callback: Function,
+) {
   await addDoc(collection(firestore, collectionName), data)
     .then((res) => {
       callback(true, res);
@@ -43,7 +70,12 @@ export async function addData(collectionName: string, data: any, callback: Funct
     });
 }
 
-export async function updateData(collectionName: string, id: string, data: any, callback: Function) {
+export async function updateData(
+  collectionName: string,
+  id: string,
+  data: any,
+  callback: Function,
+) {
   const docRef = doc(firestore, collectionName, id);
   await updateDoc(docRef, data)
     .then(() => {
@@ -54,7 +86,11 @@ export async function updateData(collectionName: string, id: string, data: any, 
     });
 }
 
-export async function deleteData(collectionName: string, id: string, callback: Function) {
+export async function deleteData(
+  collectionName: string,
+  id: string,
+  callback: Function,
+) {
   const docRef = doc(firestore, collectionName, id);
   await deleteDoc(docRef)
     .then(() => {
@@ -65,16 +101,22 @@ export async function deleteData(collectionName: string, id: string, callback: F
     });
 }
 
-export async function uploadFile(userid: string, file: any, callback: Function) {
+export async function uploadFile(
+  id: string,
+  file: any,
+  newName: string,
+  collection: string,
+  callback: Function,
+) {
   if (file) {
     if (file.size < 1048576) {
-      const newName = "profile." + file.name.split(".")[1];
-      const storageRef = ref(storage, `images/users/${userid}/${newName}`);
+      const storageRef = ref(storage, `images/${collection}/${id}/${newName}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
           console.log(error);
