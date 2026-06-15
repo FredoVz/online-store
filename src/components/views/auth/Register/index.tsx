@@ -50,10 +50,10 @@ const RegisterView = ({ setToaster }: { setToaster: Dispatch<SetStateAction<{}>>
   return (
     <AuthLayout title="Register" link="/auth/login" linkText="Have an account? Sign in " setToaster={setToaster}>
       <form onSubmit={handleSubmit}>
-        <Input label="Email" name="email" type="email" />
-        <Input label="Fullname" name="fullname" type="text" />
-        <Input label="Phone" name="phone" type="number" />
-        <Input label="Password" name="password" type="password" />
+        <Input className={styles.register__input} label="Email" name="email" type="email" />
+        <Input className={styles.register__input} label="Fullname" name="fullname" type="text" />
+        <Input className={styles.register__input} label="Phone" name="phone" type="number" />
+        <Input className={styles.register__input} label="Password" name="password" type="password" />
         <Button type="submit" className={styles.register__button}>
           {isLoading ? "Loading..." : "Register"}
         </Button>
