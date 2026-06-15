@@ -70,6 +70,7 @@ const DetailProductView = (props: PropTypes) => {
           <h1>{product?.name}</h1>
           <h3 className={styles.detail__main__right__category}>{product?.category}</h3>
           <h3 className={styles.detail__main__right__price}>{convertIDR(product?.price)}</h3>
+          <p className={styles.detail__main__right__description}>{product?.description}</p>
           <p className={styles.detail__main__right__subtitle}>Select Size</p>
           <div className={styles.detail__main__right__size}>
             {product?.stock?.map((item: { size: string; qty: number }) => (

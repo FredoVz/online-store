@@ -61,7 +61,7 @@ const CartView = (props: Proptypes) => {
                   <div className={styles.cart__main__list__item__info__data}>
                     <label className={styles.cart__main__list__item__info__data__size}>
                       Size
-                      <Select name="size" options={getOptionsSize(item.id, item.size)}></Select>
+                      <Select name="size" options={getOptionsSize(item.id, item.size)} />
                     </label>
 
                     <label className={styles.cart__main__list__item__info__data__qty}>
