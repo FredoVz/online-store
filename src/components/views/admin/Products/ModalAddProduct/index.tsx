@@ -7,7 +7,6 @@ import styles from "./ModalAddProduct.module.scss";
 import { Product } from "@/types/product.type";
 import InputFile from "@/components/ui/InputFile";
 import productServices from "@/services/product";
-import { useSession } from "next-auth/react";
 import { uploadFile } from "@/lib/firebase/service";
 import Image from "next/image";
 
@@ -22,7 +21,6 @@ const ModalAddProduct = (props: Proptypes) => {
   const [isLoading, setIsLoading] = useState(false);
   const [stockCount, setStockCount] = useState([{ size: "", qty: 0 }]);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
-  const session: any = useSession();
 
   const handleStock = (e: any, i: number, type: string) => {
     const newStockCount: any = [...stockCount];
@@ -34,38 +32,44 @@ const ModalAddProduct = (props: Proptypes) => {
     const file = form.image.files[0];
     const newName = "main." + file.name.split(".")[1];
     if (file) {
-      uploadFile(id, file, newName, "products", async (status: boolean, newImageURL: string) => {
-        if (status) {
-          const data = {
-            image: newImageURL,
-          };
-          const result = await productServices.updateProduct(id, data, session.data?.accessToken);
-          if (result.status === 200) {
-            setIsLoading(false);
-            setUploadedImage(null);
-            form.reset();
-            setModalAddProduct(false);
-            const { data } = await productServices.getAllProducts();
-            setProductsData(data.data);
-            setToaster({
-              variant: "success",
-              message: "Success Add Product",
-            });
+      uploadFile(
+        id,
+        file,
+        newName,
+        "products",
+        async (status: boolean, newImageURL: string) => {
+          if (status) {
+            const data = {
+              image: newImageURL,
+            };
+            const result = await productServices.updateProduct(id, data);
+            if (result.status === 200) {
+              setIsLoading(false);
+              setUploadedImage(null);
+              form.reset();
+              setModalAddProduct(false);
+              const { data } = await productServices.getAllProducts();
+              setProductsData(data.data);
+              setToaster({
+                variant: "success",
+                message: "Success Add Product",
+              });
+            } else {
+              setIsLoading(false);
+              setToaster({
+                variant: "danger",
+                message: "Failed Add Product",
+              });
+            }
           } else {
             setIsLoading(false);
             setToaster({
               variant: "danger",
-              message: "Failed Add Product",
+              message: "Failed Upload Image",
             });
           }
-        } else {
-          setIsLoading(false);
-          setToaster({
-            variant: "danger",
-            message: "Failed Upload Image",
-          });
-        }
-      });
+        },
+      );
     }
   };
 
@@ -89,7 +93,7 @@ const ModalAddProduct = (props: Proptypes) => {
       image: "",
     };
 
-    const result = await productServices.addProduct(data, session.data?.accessToken);
+    const result = await productServices.addProduct(data);
 
     if (result.status === 200) {
       uploadImage(result.data.data.id, form);
@@ -100,9 +104,27 @@ const ModalAddProduct = (props: Proptypes) => {
     <Modal onClose={() => setModalAddProduct(false)}>
       <h1>Add Product</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <Input label="Name" name="name" type="text" placeholder="Insert product name" className={styles.form__input} />
-        <Input label="Price" name="price" type="number" placeholder="Insert product price" className={styles.form__input} />
-        <Input label="Description" name="description" type="text" placeholder="Insert product description" className={styles.form__input} />
+        <Input
+          label="Name"
+          name="name"
+          type="text"
+          placeholder="Insert product name"
+          className={styles.form__input}
+        />
+        <Input
+          label="Price"
+          name="price"
+          type="number"
+          placeholder="Insert product price"
+          className={styles.form__input}
+        />
+        <Input
+          label="Description"
+          name="description"
+          type="text"
+          placeholder="Insert product description"
+          className={styles.form__input}
+        />
         <Select
           label="Category"
           name="category"
@@ -123,9 +145,23 @@ const ModalAddProduct = (props: Proptypes) => {
         />
         <label htmlFor="image">Image</label>
         <div className={styles.form__image}>
-          {uploadedImage ? <Image width={200} height={200} src={URL.createObjectURL(uploadedImage)} alt="image" className={styles.form__image__preview} /> : <div className={styles.form__image__placeholder}>No Image</div>}
+          {uploadedImage ? (
+            <Image
+              width={200}
+              height={200}
+              src={URL.createObjectURL(uploadedImage)}
+              alt="image"
+              className={styles.form__image__preview}
+            />
+          ) : (
+            <div className={styles.form__image__placeholder}>No Image</div>
+          )}
 
-          <InputFile name="image" uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} />
+          <InputFile
+            name="image"
+            uploadedImage={uploadedImage}
+            setUploadedImage={setUploadedImage}
+          />
         </div>
         <label htmlFor="stock">Stock</label>
         {stockCount.map((item: { size: string; qty: number }, i: number) => (
@@ -155,7 +191,11 @@ const ModalAddProduct = (props: Proptypes) => {
             </div>
           </div>
         ))}
-        <Button type="button" className={styles.form__stock__button} onClick={() => setStockCount([...stockCount, { size: "", qty: 0 }])}>
+        <Button
+          type="button"
+          className={styles.form__stock__button}
+          onClick={() => setStockCount([...stockCount, { size: "", qty: 0 }])}
+        >
           Add New Stock
         </Button>
         <Button type="submit" disabled={isLoading}>

@@ -1,10 +1,8 @@
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
-import userServices from "@/services/user";
 import styles from "./ModalDeleteProduct.module.scss";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Product } from "@/types/product.type";
-import { useSession } from "next-auth/react";
 import productServices from "@/services/product";
 import { deleteFile } from "@/lib/firebase/service";
 
@@ -18,14 +16,10 @@ type Proptypes = {
 const ModalDeleteProduct = (props: Proptypes) => {
   const { deletedProduct, setDeletedProduct, setProductsData, setToaster } =
     props;
-  const session: any = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
-    const result = await productServices.deleteProduct(
-      deletedProduct.id,
-      session.data?.accessToken,
-    );
+    const result = await productServices.deleteProduct(deletedProduct.id);
     if (result.status === 200) {
       setIsLoading(false);
       deleteFile(

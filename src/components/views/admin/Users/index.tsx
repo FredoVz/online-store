@@ -58,7 +58,11 @@ const UsersAdminView = (props: PropTypes) => {
                       >
                         <i className="bx bx-edit" />
                       </Button>
-                      <Button type="button" className={styles.users__table__action__delete} onClick={() => setDeletedUser(user)}>
+                      <Button
+                        type="button"
+                        className={styles.users__table__action__delete}
+                        onClick={() => setDeletedUser(user)}
+                      >
                         <i className="bx bx-trash" />
                       </Button>
                     </div>
@@ -69,8 +73,22 @@ const UsersAdminView = (props: PropTypes) => {
           </table>
         </div>
       </AdminLayout>
-      {Object.keys(updatedUser).length && <ModalUpdateUser updatedUser={updatedUser} setUpdatedUser={setUpdatedUser} setUsersData={setUsersData} setToaster={setToaster} session={session} />}
-      {Object.keys(deletedUser).length && <ModalDeleteUser deletedUser={deletedUser} setDeletedUser={setDeletedUser} setUsersData={setUsersData} setToaster={setToaster} session={session} />}
+      {Object.keys(updatedUser).length && (
+        <ModalUpdateUser
+          updatedUser={updatedUser}
+          setUpdatedUser={setUpdatedUser}
+          setUsersData={setUsersData}
+          setToaster={setToaster}
+        />
+      )}
+      {Object.keys(deletedUser).length && (
+        <ModalDeleteUser
+          deletedUser={deletedUser}
+          setDeletedUser={setDeletedUser}
+          setUsersData={setUsersData}
+          setToaster={setToaster}
+        />
+      )}
     </>
   );
 };

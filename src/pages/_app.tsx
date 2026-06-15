@@ -1,6 +1,6 @@
 import Navbar from "@/components/fragments/Navbar";
 import Toaster from "@/components/ui/Toaster";
-import "@/styles/globals.css";
+import "@/styles/globals.scss";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { Lato } from "next/font/google";
@@ -14,7 +14,10 @@ const lato = Lato({
 
 const disableNavbar = ["auth", "admin", "member"];
 
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   const { pathname } = useRouter();
   const [toaster, setToaster] = useState<any>({});
 
@@ -30,7 +33,14 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
     <SessionProvider session={session}>
       <div className={lato.className}>
         {!disableNavbar.includes(pathname.split("/")[1]) && <Navbar />}
-        <Component {...pageProps} setToaster={setToaster} />;{Object.keys(toaster).length > 0 && <Toaster variant={toaster.variant} message={toaster.message} setToaster={setToaster} />}
+        <Component {...pageProps} setToaster={setToaster} />;
+        {Object.keys(toaster).length > 0 && (
+          <Toaster
+            variant={toaster.variant}
+            message={toaster.message}
+            setToaster={setToaster}
+          />
+        )}
       </div>
     </SessionProvider>
   );

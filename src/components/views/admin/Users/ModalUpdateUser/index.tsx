@@ -12,11 +12,10 @@ type Proptypes = {
   setToaster: Dispatch<SetStateAction<{}>>;
   updatedUser: User | any;
   setUpdatedUser: Dispatch<SetStateAction<{}>>;
-  session: any;
 };
 
 const ModalUpdateUser = (props: Proptypes) => {
-  const { updatedUser, setUpdatedUser, setUsersData, setToaster, session } = props;
+  const { updatedUser, setUpdatedUser, setUsersData, setToaster } = props;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdateUser = async (event: FormEvent<HTMLFormElement>) => {
@@ -27,7 +26,7 @@ const ModalUpdateUser = (props: Proptypes) => {
       role: form.role.value,
     };
 
-    const result = await userServices.updateUser(updatedUser.id, data, session.data?.accessToken);
+    const result = await userServices.updateUser(updatedUser.id, data);
     if (result.status === 200) {
       setIsLoading(false);
       setUpdatedUser({});
@@ -49,9 +48,30 @@ const ModalUpdateUser = (props: Proptypes) => {
     <Modal onClose={() => setUpdatedUser({})}>
       <h1>Update User</h1>
       <form onSubmit={handleUpdateUser} className={styles.form}>
-        <Input label="Email" name="email" type="email" defaultValue={updatedUser.email} disabled className={styles.form__input}></Input>
-        <Input label="Fullname" name="fullname" type="text" defaultValue={updatedUser.fullname} disabled className={styles.form__input}></Input>
-        <Input label="Phone" name="phone" type="number" defaultValue={updatedUser.phone} disabled className={styles.form__input}></Input>
+        <Input
+          label="Email"
+          name="email"
+          type="email"
+          defaultValue={updatedUser.email}
+          disabled
+          className={styles.form__input}
+        ></Input>
+        <Input
+          label="Fullname"
+          name="fullname"
+          type="text"
+          defaultValue={updatedUser.fullname}
+          disabled
+          className={styles.form__input}
+        ></Input>
+        <Input
+          label="Phone"
+          name="phone"
+          type="number"
+          defaultValue={updatedUser.phone}
+          disabled
+          className={styles.form__input}
+        ></Input>
         <Select
           label="Role"
           name="role"
