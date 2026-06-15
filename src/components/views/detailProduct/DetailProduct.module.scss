@@ -20,8 +20,13 @@
       &__price {
         margin-top: 20px;
       }
+
+      &__subtitle {
+        margin-top: 60px;
+        font-weight: 500;
+      }
+
       &__size {
-        margin-top: 20px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
@@ -43,7 +48,17 @@
           &__input:checked + &__label {
             border: 1px solid #000;
           }
+          &__input:disabled + &__label {
+            opacity: 0.5;
+            cursor: default;
+          }
         }
+      }
+
+      &__add {
+        margin-top: 60px;
+        width: 100%;
+        padding: 20px;
       }
     }
   }
