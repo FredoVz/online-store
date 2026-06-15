@@ -23,7 +23,7 @@ const CartView = (props: Proptypes) => {
 
   const getOptionsSize = (id: string, selected: string) => {
     const product = products.find((product) => product.id === id);
-    const options = product?.stock.map((stock: { size: string; qty: number }) => {
+    const options = product?.stock?.map((stock: { size: string; qty: number }) => {
       if (stock.qty > 0) {
         return {
           label: stock.size,
@@ -37,7 +37,7 @@ const CartView = (props: Proptypes) => {
   };
 
   const getTotalPrice = () => {
-    const total = cart.reduce((acc: number, item: { id: string; size: string; qty: number }) => {
+    const total = cart?.reduce((acc: number, item: { id: string; size: string; qty: number }) => {
       const product: any = getProduct(item.id);
       return (acc += parseInt(product?.price) * item.qty);
     }, 0);
@@ -50,7 +50,7 @@ const CartView = (props: Proptypes) => {
       <div className={styles.cart__main}>
         <h1 className={styles.cart__main__title}>Cart</h1>
         <div className={styles.cart__main__list}>
-          {cart.map((item: { id: string; size: string; qty: number }) => (
+          {cart?.map((item: { id: string; size: string; qty: number }) => (
             <Fragment key={`${item.id}-${item.size}`}>
               <div className={styles.cart__main__list__item}>
                 {getProduct(item.id)?.image && <Image src={`${getProduct(item.id)?.image}`} width={150} height={150} alt={`${item.id}-${item.size}`} className={styles.cart__main__list__item__image} />}
