@@ -3,14 +3,9 @@ import productServices from "@/services/product";
 import userServices from "@/services/user";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-type Proptypes = {
-  setToaster: Dispatch<SetStateAction<{}>>;
-};
-
-const CartPage = (props: Proptypes) => {
-  const { setToaster } = props;
+const CartPage = () => {
   const session: any = useSession();
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
@@ -40,7 +35,7 @@ const CartPage = (props: Proptypes) => {
       <Head>
         <title>Cart</title>
       </Head>
-      <CartView cart={cart} products={products} setToaster={setToaster} />
+      <CartView cart={cart} products={products} />
     </>
   );
 };

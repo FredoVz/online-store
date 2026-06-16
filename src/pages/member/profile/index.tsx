@@ -1,14 +1,9 @@
 import ProfileMemberView from "@/components/views/member/Profile";
-import { Dispatch, SetStateAction } from "react";
 
-type Proptypes = {
-  setToaster: Dispatch<SetStateAction<{}>>;
-};
-
-const ProfilePage = ({ setToaster }: Proptypes) => {
+const ProfilePage = () => {
   return (
     <>
-      <ProfileMemberView setToaster={setToaster} />
+      <ProfileMemberView />
     </>
   );
 };
