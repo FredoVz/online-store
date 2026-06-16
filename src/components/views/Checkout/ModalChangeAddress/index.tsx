@@ -2,6 +2,7 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import styles from "./ModalChangeAddress.module.scss";
 import { Dispatch, SetStateAction } from "react";
+import Input from "@/components/ui/Input";
 
 type Proptypes = {
   address: any;
@@ -34,6 +35,23 @@ const ModalChangeAddress = (props: Proptypes) => {
           <p>Note: {item.note}</p>
         </div>
       ))}
+      <Button className={styles.modal__btn} type="button">
+        Add new address
+      </Button>
+      <div>
+        <Input
+          type="text"
+          name="recipient"
+          label="Recipient"
+          placeholder="Insert Recipient"
+        />
+        <Input
+          type="number"
+          name="phone"
+          label="Recipient Phone"
+          placeholder="Insert Recipient Phone"
+        />
+      </div>
     </Modal>
   );
 };
