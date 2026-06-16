@@ -1,28 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { signUp } from "@/services/auth/services";
+import {
+  responseApiFailed,
+  responseApiMethodNotAllowed,
+  responseApiSuccess,
+} from "@/utils/responseApi";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   if (req.method === "POST") {
     await signUp(req.body, (status: boolean) => {
       if (status) {
-        res.status(200).json({
-          status: true,
-          statusCode: 200,
-          message: "success",
-        });
+        responseApiSuccess(res);
       } else {
-        res.status(400).json({
-          status: false,
-          statusCode: 400,
-          message: "failed",
-        });
+        responseApiFailed(res);
       }
     });
   } else {
-    res.status(405).json({
-      status: false,
-      statusCode: 405,
-      message: "Method not allowed",
-    });
+    responseApiMethodNotAllowed(res);
   }
 }
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
