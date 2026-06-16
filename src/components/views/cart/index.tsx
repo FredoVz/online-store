@@ -10,6 +10,7 @@ import { ToasterContext } from "@/contexts/ToasterContext";
 import { useSession } from "next-auth/react";
 import productServices from "@/services/product";
 import { Product } from "@/types/product.type";
+import Link from "next/link";
 
 const CartView = () => {
   const { setToaster } = useContext(ToasterContext);
@@ -38,13 +39,13 @@ const CartView = () => {
   }, [session]);
 
   const getProduct = (id: string) => {
-    const product = products.find((product) => product.id === id);
+    const product: any = products.find((product: Product) => product.id === id);
     return product;
   };
 
   const getOptionsSize = (id: string, selected: string) => {
-    const product = products.find((product) => product.id === id);
-    const options = product?.stock?.map(
+    const product: any = products.find((product: Product) => product.id === id);
+    const options: any = product?.stock?.map(
       (stock: { size: string; qty: number }) => {
         if (stock.qty > 0) {
           return {
@@ -55,7 +56,7 @@ const CartView = () => {
         }
       },
     );
-    const data = options?.filter((option) => option !== undefined);
+    const data = options?.filter((option: any) => option !== undefined);
     return data;
   };
 
@@ -197,9 +198,11 @@ const CartView = () => {
           <p>{convertIDR(getTotalPrice())}</p>
         </div>
         <hr />
-        <Button type="button" className={styles.cart__summary__button}>
-          Checkout
-        </Button>
+        <Link href="/checkout">
+          <Button type="button" className={styles.cart__summary__button}>
+            Checkout
+          </Button>
+        </Link>
       </div>
     </div>
   );
