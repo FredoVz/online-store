@@ -1,4 +1,4 @@
-import OrdersMemberView from "@/components/views/Members/Orders";
+import OrdersMemberView from "@/components/views/Member/Orders";
 
 const OrdersPage = () => {
   return (
