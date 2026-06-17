@@ -17,6 +17,11 @@ const listSidebarItem = [
     icon: "bx-box",
   },
   {
+    title: "Orders",
+    url: "/admin/orders",
+    icon: "bx-cart",
+  },
+  {
     title: "Users",
     url: "/admin/users",
     icon: "bx-group",

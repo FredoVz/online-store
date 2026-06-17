@@ -5,9 +5,12 @@ const endpoint = {
 };
 
 const transactionServices = {
-  getTransaction: (order_id: string) => instance.get(`${endpoint.transaction}?order_id=${order_id}`),
+  getTransaction: (order_id: string) =>
+    instance.get(`${endpoint.transaction}?order_id=${order_id}`),
+  getAllTransaction: () => instance.get(`${endpoint.transaction}/admin`),
   generateTransaction: (data: any) => instance.post(endpoint.transaction, data),
-  updateTransaction: (order_id: string) => instance.put(`${endpoint.transaction}?order_id=${order_id}`),
+  updateTransaction: (order_id: string) =>
+    instance.put(`${endpoint.transaction}?order_id=${order_id}`),
 };
 
 export default transactionServices;
