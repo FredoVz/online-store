@@ -8,6 +8,14 @@ import { useSession } from "next-auth/react";
 import productServices from "@/services/product";
 import { Product } from "@/types/product.type";
 import ModalChangeAddress from "./ModalChangeAddress";
+import Script from "next/script";
+import transactionServices from "@/services/transaction";
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 const CheckoutView = () => {
   const session: any = useSession();
@@ -57,8 +65,25 @@ const CheckoutView = () => {
     return total;
   };
 
+  const handleCheckout = async () => {
+    const payload = {
+      user: {
+        fullname: profile.fullname,
+        email: profile.email,
+        address: profile.address[selectedAddress],
+      },
+      transaction: {
+        items: profile.carts,
+        total: getTotalPrice(),
+      },
+    };
+    const { data } = await transactionServices.generateTransaction(payload);
+    window.snap.pay(data.data.token);
+  };
+
   return (
     <>
+      <Script src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL} data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY} strategy="lazyOnload" />
       <div className={styles.checkout}>
         <div className={styles.checkout__main}>
           <h1 className={styles.checkout__main__title}>Checkout</h1>
@@ -128,7 +153,7 @@ const CheckoutView = () => {
             <p>{convertIDR(getTotalPrice())}</p>
           </div>
           <hr />
-          <Button type="button" className={styles.checkout__summary__button}>
+          <Button type="button" className={styles.checkout__summary__button} onClick={handleCheckout}>
             Process Payment
           </Button>
         </div>
