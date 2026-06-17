@@ -3,54 +3,81 @@ import Button from "@/components/ui/Button";
 import styles from "./Orders.module.scss";
 import { useEffect, useState } from "react";
 import { User } from "@/types/user.type";
+import userServices from "@/services/user";
+import { convertIDR } from "@/utils/currency";
+import Script from "next/script";
+import ModalDetailOrder from "./ModalDetailOrder";
+import productServices from "@/services/product";
 
-type PropTypes = {
-  users: User[];
-};
+const MemberOrdersView = () => {
+  const [profile, setProfile] = useState<User | any>({});
+  const [detailOrder, setDetailOrder] = useState<any>({});
+  const [products, setProducts] = useState([]);
 
-const MemberOrdersView = (props: PropTypes) => {
-  const { users } = props;
-  const [usersData, setUsersData] = useState<User[]>([]);
+  const getAllProducts = async () => {
+    const { data } = await productServices.getAllProducts();
+    setProducts(data.data);
+  };
 
   useEffect(() => {
-    setUsersData(users);
-  }, [users]);
+    getAllProducts();
+  }, []);
+
+  const getProfile = async () => {
+    const { data } = await userServices.getProfile();
+    setProfile(data.data);
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   return (
     <>
+      <Script
+        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL}
+        data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+      />
       <AdminLayout>
-        <div className={styles.users}>
+        <div className={styles.orders}>
           <h1>Order History</h1>
-          <table className={styles.users__table}>
+          <table className={styles.orders__table}>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Fullname</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Role</th>
+                <th>Order ID</th>
+                <th>Total</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {usersData.map((user: User, index: number) => (
-                <tr key={user.id}>
+              {profile?.transaction?.map((transaction: any, index: number) => (
+                <tr key={transaction.order_id}>
                   <td>{index + 1}</td>
-                  <td>{user.fullname}</td>
-                  <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>{user.role}</td>
+                  <td>{transaction.order_id}</td>
+                  <td>{convertIDR(transaction.total)}</td>
+                  <td>{transaction.status}</td>
                   <td>
-                    <div className={styles.users__table__action}>
-                      {/* <Button
+                    <div className={styles.orders__table__action}>
+                      <Button
+                        type="button"
+                        onClick={() => setDetailOrder(transaction)}
+                        className={styles.orders__table__action__edit}
+                      >
+                        <i className="bx bx-dots-vertical-rounded" />
+                      </Button>
+                      <Button
                         type="button"
                         onClick={() => {
-                          setUpdatedUser(user);
+                          window.snap.pay(transaction.token);
                         }}
-                        className={styles.users__table__action__edit}
+                        className={styles.orders__table__action__pay}
+                        disabled={transaction.status !== "pending"}
                       >
-                        <i className="bx bx-edit" />
-                      </Button> */}
+                        <i className="bx bx-currency-note" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -59,6 +86,13 @@ const MemberOrdersView = (props: PropTypes) => {
           </table>
         </div>
       </AdminLayout>
+      {Object.keys(detailOrder).length > 0 && (
+        <ModalDetailOrder
+          setDetailOrder={setDetailOrder}
+          detailOrder={detailOrder}
+          products={products}
+        />
+      )}
     </>
   );
 };
