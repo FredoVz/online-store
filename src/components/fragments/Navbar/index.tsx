@@ -19,7 +19,6 @@ const NavItems = [
 
 const Navbar = () => {
   const { data }: any = useSession();
-  console.log(data);
   const { pathname, push } = useRouter();
   const [dropdownUser, setDropdownUser] = useState(false);
 
@@ -43,7 +42,15 @@ const Navbar = () => {
             </Link>
           </div>
           <div className={styles.navbar__user__profile}>
-            <Image width={40} height={40} src={data?.user.image} alt={data?.user.name} className={styles.navbar__user__profile__image} onClick={() => setDropdownUser(!dropdownUser)} />
+            {data?.user.image ? (
+              <Image width={40} height={40} src={data?.user.image} alt={data?.user.fullname} className={styles.navbar__user__profile__image} onClick={() => setDropdownUser(!dropdownUser)} />
+            ) : (
+              <div className={styles.navbar__user__profile__image} onClick={() => setDropdownUser(!dropdownUser)}>
+                {data?.user?.fullname?.charAt(0)}
+              </div>
+            )}
+            <i className={`bx bx-chevron-down ${styles.navbar__user__profile__icon}`} onClick={() => setDropdownUser(!dropdownUser)} />
+
             <div className={`${styles.navbar__user__profile__dropdown} ${dropdownUser && styles["navbar__user__profile__dropdown--active"]}`}>
               {isAdmin && (
                 <button className={styles.navbar__user__profile__dropdown__item} onClick={() => push("/admin")}>
