@@ -2,6 +2,7 @@ import styles from "./Products.module.scss";
 import { Product } from "@/types/product.type";
 import Card from "./Card";
 import Link from "next/link";
+import CardSkeleton from "./CardSkeleton";
 
 type PropTypes = {
   products: Product[];
@@ -15,29 +16,17 @@ const ProductView = (props: PropTypes) => {
       <div className={styles.product__main}>
         <div className={styles.product__main__filter}>
           <div className={styles.product__main__filter__data}>
-            <h4 className={styles.product__main__filter__data__title}>
-              Gender
-            </h4>
+            <h4 className={styles.product__main__filter__data__title}>Gender</h4>
             <div className={styles.product__main__filter__data__list}>
               <div className={styles.product__main__filter__data__list__item}>
                 <input type="checkbox" id="men" />
-                <label
-                  className={
-                    styles.product__main__filter__data__list__item__label
-                  }
-                  htmlFor="men"
-                >
+                <label className={styles.product__main__filter__data__list__item__label} htmlFor="men">
                   Men
                 </label>
               </div>
               <div className={styles.product__main__filter__data__list__item}>
                 <input type="checkbox" id="women" />
-                <label
-                  className={
-                    styles.product__main__filter__data__list__item__label
-                  }
-                  htmlFor="women"
-                >
+                <label className={styles.product__main__filter__data__list__item__label} htmlFor="women">
                   Women
                 </label>
               </div>
@@ -45,11 +34,19 @@ const ProductView = (props: PropTypes) => {
           </div>
         </div>
         <div className={styles.product__main__content}>
-          {products.map((product) => (
-            <Link href={`/products/${product.id}`} key={product.id}>
-              <Card product={product} />
-            </Link>
-          ))}
+          {products.length > 0 ? (
+            <>
+              {products.map((product) => (
+                <Link href={`/products/${product.id}`} key={product.id}>
+                  <Card product={product} />
+                </Link>
+              ))}
+            </>
+          ) : (
+            <>
+              <CardSkeleton />
+            </>
+          )}
         </div>
       </div>
     </div>

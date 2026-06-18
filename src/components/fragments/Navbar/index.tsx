@@ -19,8 +19,11 @@ const NavItems = [
 
 const Navbar = () => {
   const { data }: any = useSession();
+  console.log(data);
   const { pathname, push } = useRouter();
   const [dropdownUser, setDropdownUser] = useState(false);
+
+  const isAdmin = data?.user?.role === "admin";
 
   return (
     <div className={styles.navbar}>
@@ -42,6 +45,11 @@ const Navbar = () => {
           <div className={styles.navbar__user__profile}>
             <Image width={40} height={40} src={data?.user.image} alt={data?.user.name} className={styles.navbar__user__profile__image} onClick={() => setDropdownUser(!dropdownUser)} />
             <div className={`${styles.navbar__user__profile__dropdown} ${dropdownUser && styles["navbar__user__profile__dropdown--active"]}`}>
+              {isAdmin && (
+                <button className={styles.navbar__user__profile__dropdown__item} onClick={() => push("/admin")}>
+                  Admin
+                </button>
+              )}
               <button className={styles.navbar__user__profile__dropdown__item} onClick={() => push("/member/profile")}>
                 Profile
               </button>
